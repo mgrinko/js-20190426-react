@@ -2,8 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import PhonesPage from './PhonesPage';
+import { BrowserRouter } from "react-router-dom";
+
 
 ReactDOM.render(
-  <PhonesPage />,
+  <BrowserRouter>
+    <PhonesPage />
+  </BrowserRouter>,
+
   document.getElementById('root')
 );

@@ -1,25 +1,44 @@
 import React from 'react';
+import { getById } from '../api/phone'
+import { Link } from "react-router-dom";
+
 
 export default class PhoneViewer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentPicture: this.props.phone.images[0],
+      phone: null,
+      currentPicture: null,
     };
   }
 
+  componentDidMount() {
+    console.log(this.props);
+
+    getById(this.props.match.params.phoneId)
+      .then(phoneDetails => {
+        this.setState({
+          phone: phoneDetails,
+          currentPicture: phoneDetails.images[0],
+        });
+      });
+  }
+
   render() {
-    const { phone } = this.props;
-    const { currentPicture } = this.state;
+    const { currentPicture, phone } = this.state;
+
+    if (!phone) {
+      return <div>Loading...</div>;
+    }
 
     return (
       <div>
-        <img className="phone" src={currentPicture} />
+        <img className="phone" src={'/' + currentPicture} />
 
-        <button onClick={this.props.onBack}>
+        <Link to="/phones">
           Back
-        </button>
+        </Link>
 
         <button onClick={this.props.onAdd}>
           Add to basket
@@ -34,7 +53,7 @@ export default class PhoneViewer extends React.Component {
               onClick={() => this.setState({ currentPicture: imageUrl })}
               key={imageUrl}
             >
-              <img src={imageUrl} />
+              <img src={'/' + imageUrl} />
             </li>
           ))}
         </ul>

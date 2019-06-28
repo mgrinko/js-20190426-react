@@ -1,20 +1,36 @@
 import React from 'react';
+import { Link } from "react-router-dom";
+import { getAll } from '../api/phone';
 
 export default class PhonesCatalog extends React.Component {
+  state = {
+    phones: [],
+    query: '',
+    sortField: 'age',
+  };
+
+  componentDidMount() {
+    this.loadPhones();
+  }
+
+  loadPhones() {
+    getAll({
+      query: this.state.query,
+      sortField: this.state.sortField,
+    })
+      .then(phones => {
+        this.setState({ phones });
+      });
+  }
+
   render() {
     return (
       <ul className="phones">
-        {this.props.phones.map(phone => (
+        {this.state.phones.map(phone => (
           <li className="thumbnail" key={phone.id}>
-            <a
-              href={'#' + phone.id}
-              className="thumb"
-              onClick={() => {
-                this.props.onPhoneSelected(phone.id);
-              }}
-            >
+            <Link to={'/phones/' + phone.id} className="thumb">
               <img alt={phone.name} src={phone.imageUrl} />
-            </a>
+            </Link>
 
             <div className="phones__btn-buy-wrapper">
               <a
@@ -27,14 +43,9 @@ export default class PhonesCatalog extends React.Component {
               </a>
             </div>
 
-            <a
-              href={'#' + phone.id}
-              onClick={() => {
-                this.props.onPhoneSelected(phone.id);
-              }}
-            >
+            <Link to={'/phones/' + phone.id}>
               {phone.name}
-            </a>
+            </Link>
 
             <p>{phone.snippet}</p>
           </li>

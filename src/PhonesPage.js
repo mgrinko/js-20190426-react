@@ -1,4 +1,8 @@
 import React from 'react';
+import { Button } from 'semantic-ui-react'
+import { Route, Switch } from "react-router-dom";
+
+
 import './App.css';
 
 import Basket from './components/Basket';
@@ -17,8 +21,6 @@ class PhonesPage extends React.Component {
       : [];
 
     this.state = {
-      phones: [],
-      selectedPhone: null,
       basketItems: initialItem,
       query: 'Moto',
       sortField: 'name',
@@ -48,10 +50,7 @@ class PhonesPage extends React.Component {
     };
 
     this.showPhone = (phoneId) => {
-      getById(phoneId)
-        .then(phoneDetails => {
-          this.setState({ selectedPhone: phoneDetails });
-        });
+
     };
     this.hidePhone = () => {
       this.setState({
@@ -70,24 +69,15 @@ class PhonesPage extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.loadPhones();
-  }
-
-  loadPhones() {
-    getAll({
-      query: this.state.query,
-      sortField: this.state.sortField,
-    })
-      .then(phones => {
-        this.setState({ phones });
-      });
-  }
-
   render() {
     return (
       <div className="row">
         <div className="col-md-2">
+          <div>
+            <Button primary>Primary</Button>
+            <Button secondary>Secondary</Button>
+          </div>
+
           <Filter
             query={this.state.query}
             sortField={this.state.sortField}
@@ -102,21 +92,13 @@ class PhonesPage extends React.Component {
         </div>
 
         <div className="col-md-10">
-          {this.state.selectedPhone ? (
-            <PhoneViewer
-              phone={this.state.selectedPhone}
-              onBack={this.hidePhone}
-              onAdd={() => {
-                this.addBasketItem(this.state.selectedPhone.id);
-              }}
-            />
-          ) : (
-            <PhonesCatalog
-              phones={this.state.phones}
-              onPhoneSelected={this.showPhone}
-              onAdd={this.addBasketItem}
-            />
-          )}
+          <Switch>
+            <Route path="/phones/:phoneId" component={PhoneViewer} />
+            <Route path="/phones" component={PhonesCatalog} />
+          </Switch>
+
+          <router-outlet></router-outlet>
+          <router-view></router-view>
         </div>
       </div>
     );
