@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import PhonesPage from './PhonesPage';
 
 ReactDOM.render(
-  <App />,
+  <PhonesPage />,
   document.getElementById('root')
 );
